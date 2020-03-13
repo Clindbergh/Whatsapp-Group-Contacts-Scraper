@@ -1,4 +1,4 @@
-// var obj = document.getElementsByClassName("infinite-list-viewport")[0].getElementsByClassName("infinite-list-item infinite-list-item-transition");
+// var participants = document.getElementsByClassName("infinite-list-viewport")[0].getElementsByClassName("infinite-list-item infinite-list-item-transition");
 // var topOfList = document.getElementsByClassName("_2wP_Y");
 // topOfList.scrollTop = 50;
 
@@ -11,8 +11,10 @@ var openWAGroup = document.getElementsByClassName("_3V5x5")[0].getElementsByClas
 openWAGroup[0].click();
 
 //Click the more Contacts button
-var btnClick_more = document.getElementsByClassName("_3p0T6");
-btnClick_more[0].click();
+var groupInfo = document.querySelector("._3xdMj");
+var participantsSection = groupInfo.querySelector(":scope > div:nth-last-child(3)");
+var btnClick_more = participantsSection.querySelector(":scope > div:last-child");
+btnClick_more.click();
 
 
 
@@ -27,44 +29,59 @@ var scrollUp = document.getElementsByClassName("_2sNbV")[0];
 	
 // }, 3000);
 
-// var obj = document.getElementsByClassName("RLfQR")[0].getElementsByClassName("_2wP_Y");
+// var participants = document.getElementsByClassName("RLfQR")[0].getElementsByClassName("_2wP_Y");
 
 //SELECT ALL PARTICIPANTS ELEMENT
-//var obj = document.getElementsByClassName("_37f_5")[0].getElementsByClassName("_3HZor")[0].getElementsByClassName("_3xdMj");
-var obj = document.getElementsByClassName("_3xdMj")[0].getElementsByClassName("_3La1s")[0].getElementsByClassName("X7YrQ");
+//var participants = document.getElementsByClassName("_37f_5")[0].getElementsByClassName("_3HZor")[0].getElementsByClassName("_3xdMj");
+var participants = participantsSection.querySelectorAll(":scope > :last-child > div > div");
 var data = [];
 
 setTimeout(function() {
-	for (var i = 0; i < obj.length; i++) {
+	function processParticipant(i) {
+		return function () {
+			var participant = participants[i];
+			participant.scrollIntoView();
+			participants = participantsSection.querySelectorAll(":scope > :last-child > div > div");
 
-        //GET PHONE NUMBER OR NAME IF ALREADY IN CONTACT
-        // var num = obj[i].getElementsByClassName("emojitext ellipsify")[0].title;
-		var namenum = obj[i].getElementsByClassName("_3H4MS")[0].innerText;
-		
-		// var img = obj[i].getElementsByClassName("avatar-image is-loaded")[0].src.replace("t=s", "t=l");
-	
-        //GET PROFILE IMAGE AND REPLACE WITH LARGE SIZE INSTEAD OF THUMBNAIL
-        // try {var img = obj[i].getElementsByClassName("_3RWII")[0].src.replace("t=s", "t=l");
-        try {var img = obj[i].getElementsByClassName("_3RWII")[0].getElementsByClassName("jZhyM _13Xdg")[0].src;
-			var num = img.match(/u=(\d*)/)[1];}
-		catch (err) { var img = "No Pic";
-			num = namenum.match(/\d+/g); }
-        // img = img.src.replace("t=s", "t=l");
-        
-        //GET SCREEN NAME
-		// try { var name = obj[i].getElementsByClassName("emojitext screen-name-text")[0].outerText; }
-		try { var name = obj[i].getElementsByClassName("_3VvbK")[0].outerText; }
-		catch (err) { 
-			var name = namenum; 
-			namenum = "IN_CONTACTS";
-            }
-            
-        //GET STATUS TEXT
-		// try { var status = obj[i].getElementsByClassName("emojitext")[1].title }
-		try { var status = obj[i].getElementsByClassName("_2Bw3Q")[0].getElementsByClassName("_19RFN")[0].title }
-		catch (err) { var status = "NONE" }
-		
-		data[i] = { num: num, namenum: namenum, name: name, img: img, status: status };
+			//GET PHONE NUMBER OR NAME IF ALREADY IN CONTACT
+			// var num = participants[i].getElementsByClassName("emojitext ellipsify")[0].title;
+			var namenum = participant.getElementsByClassName("_3H4MS")[0].innerText;
+
+			// var img = participants[i].getElementsByClassName("avatar-image is-loaded")[0].src.replace("t=s", "t=l");
+
+			//GET PROFILE IMAGE AND REPLACE WITH LARGE SIZE INSTEAD OF THUMBNAIL
+			// try {var img = participants[i].getElementsByClassName("_3RWII")[0].src.replace("t=s", "t=l");
+			try {
+				var img = participant.getElementsByClassName("_3RWII")[0].getElementsByClassName("jZhyM _13Xdg")[0].src;
+				var num = img.match(/u=(\d*)/)[1];
+			} catch (err) {
+				var img = "No Pic";
+				num = namenum.match(/\d+/g);
+			}
+			// img = img.src.replace("t=s", "t=l");
+
+			//GET SCREEN NAME
+			// try { var name = participants[i].getElementsByClassName("emojitext screen-name-text")[0].outerText; }
+			try {
+				var name = participant.getElementsByClassName("_3VvbK")[0].outerText;
+			} catch (err) {
+				var name = namenum;
+				namenum = "IN_CONTACTS";
+			}
+
+			//GET STATUS TEXT
+			// try { var status = participants[i].getElementsByClassName("emojitext")[1].title }
+			try {
+				var status = participant.getElementsByClassName("_2Bw3Q")[0].getElementsByClassName("_19RFN")[0].title
+			} catch (err) {
+				var status = "NONE"
+			}
+
+			data[i] = {num: num, namenum: namenum, name: name, img: img, status: status};
+		}
+	}
+	for (var i = 0; i < participants.length; i++) {
+		window.setTimeout(processParticipant(i), 250);
 	}
 
 	/* $(document).ready(function(){
@@ -88,8 +105,8 @@ setTimeout(function() {
 	// CSV += ReportTitle + '\r\n\n';
 	var ReportTitle = "Whatsapp Contacts";
 	CSV += ReportTitle + '\r\n\n';
-	CSV += "Group Name : " + document.getElementsByClassName("_19vo_")[0].getElementsByClassName("_19RFN")[0].title + '\r\n' + "Number of participants : " + obj.length + '\r\n\n';
-	//CSV += "Group Name : " + document.evaluate('//*[@id="main"]/header/div[2]/div[1]/div/span', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.innerHTML + '\r\n' + "Number of participants : " + obj.length + '\r\n\n';
+	CSV += "Group Name : " + document.getElementsByClassName("_19vo_")[0].getElementsByClassName("_19RFN")[0].title + '\r\n' + "Number of participants : " + participants.length + '\r\n\n';
+	//CSV += "Group Name : " + document.evaluate('//*[@id="main"]/header/div[2]/div[1]/div/span', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.innerHTML + '\r\n' + "Number of participants : " + participants.length + '\r\n\n';
 
 
 	//This condition will generate the Label/Header
@@ -132,7 +149,7 @@ setTimeout(function() {
 	var fileName = "WAGroup_";
 	//this will remove the blank-spaces from the title and replace it with an underscore
 	// fileName += document.getElementsByClassName("input-wrapper locked")[0].getElementsByTagName("div")[1].innerHTML.replace(/ /g,"_");   
-	fileName += document.evaluate('//*[@id="main"]/header/div[2]/div[1]/div/span', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.innerHTML.replace(/ /g,"_");
+	fileName += document.evaluate('//*[@id="main"]/header/div[2]/div[1]/div/span/text()', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.data;
 		
 	//Initialize file format you want csv or xls
 	var uri = 'data:text/csv;charset=utf-8,' + escape(CSV);
@@ -155,4 +172,4 @@ setTimeout(function() {
 	link.click();
 	document.body.removeChild(link);
 	// }
-}, 2000);
+}, 60000);
